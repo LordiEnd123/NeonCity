@@ -1,5 +1,6 @@
 import pygame
 import importlib
+import os
 from player import Player
 from objects.exit_tiles import ExitTile
 from menu_all.level_menu import LevelCompleteMenu
@@ -212,6 +213,10 @@ def run_level(screen, level_number, sound_manager, settings_menu):
     total_crystals = len(world.crystals)
     collected_crystals = 0
 
+    levels_folder = "levels"  # Папка с уровнями
+    level_files = [f for f in os.listdir(levels_folder) if f.startswith("level") and f.endswith(".py")]
+    max_level = len(level_files)
+
     while run:
         game_active = not paused and not level_menu.visible and not death_menu.visible and not final_menu.visible
         screen.blit(bg_img, (0, 0))
@@ -319,7 +324,7 @@ def run_level(screen, level_number, sound_manager, settings_menu):
                     if new_unlocked > current_unlocked:
                         save_progress(new_unlocked)
 
-                    if level_number >= 10:
+                    if level_number == max_level:
                         final_menu.show()
                     else:
                         level_menu.show()

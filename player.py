@@ -1,6 +1,6 @@
 import pygame
 import os
-
+from stats import PlayerStatsManager  # Импортируем менеджер характеристик
 
 class Player:
     def __init__(self, x, y, sound_manager):
@@ -31,6 +31,16 @@ class Player:
         self.ready_to_climb = False
         self.climbing_direction = None
 
+        # Инициализация менеджера характеристик
+        self.stats_manager = PlayerStatsManager()
+
+        # Время с начала игры
+        self.last_time = pygame.time.get_ticks()  # Время в миллисекундах
+
+        # Инициализация ускорения
+        self.accelerating = False
+        self.alpha = 0  # Прозрачность полоски (начинаем с 0, то есть полностью прозрачна)
+
         self.update_hitbox()
 
     def load_images(self):
@@ -58,6 +68,37 @@ class Player:
         self.dy = 0
         self.moving = False
         self.climbing_direction = None
+
+        # Получаем текущее время
+        current_time = pygame.time.get_ticks()
+        delta_time = (current_time - self.last_time) / 1000.0  # delta_time в секундах
+
+        # Обновляем время для следующего кадра
+        self.last_time = current_time
+
+        # Логика ускорения (при удержании Ctrl)
+        if keys[pygame.K_LCTRL] and self.stats_manager.get_stat("stamina") > 0:
+            self.accelerating = True  # Ускорение
+            self.speed = 6.5  # Увеличиваем скорость при ускорении
+        else:
+            self.accelerating = False  # Без ускорения
+            self.speed = 5  # Обычная скорость
+
+        # Обновляем выносливость в зависимости от движения и ускорения
+        if keys[pygame.K_d] or keys[pygame.K_a]:
+            self.moving = True
+            self.stats_manager.update_stamina(self.moving, self.accelerating, delta_time)
+        else:
+            # Если игрок не двигается, восстанавливаем выносливость
+            self.stats_manager.update_stamina(self.moving, self.accelerating, delta_time)
+
+        # Плавное изменение прозрачности полоски (затухание)
+        if self.accelerating:
+            self.alpha = min(self.alpha + 10 * delta_time, 255)  # Увеличиваем прозрачность
+        else:
+            self.alpha = max(self.alpha - 10 * delta_time, 0)  # Уменьшаем прозрачность
+
+        self.update_hitbox()
 
         # Проверка, есть ли лестница под игроком
         self.ready_to_climb = False
@@ -222,6 +263,7 @@ class Player:
             self.image = self.idle_image
 
     def update(self, world, screen):
+        # Вызов handle_input без необходимости передавать delta_time напрямую
         keys = pygame.key.get_pressed()
         self.handle_input(keys, world)
         self.apply_physics()
@@ -236,7 +278,34 @@ class Player:
     def draw(self, screen):
         flipped = pygame.transform.flip(self.image, True, False) if not self.facing_right else self.image
         screen.blit(flipped, self.rect)
-      #  pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2)
+
+        # Рисуем полоску ускорения
+        self.draw_acceleration_bar(screen)
+
+    def draw_acceleration_bar(self, screen):
+        """Отображаем полоску ускорения над персонажем"""
+
+        # Проверяем, активен ли ускорение
+        if self.accelerating:
+            # Получаем процент оставшейся выносливости
+            stamina_percentage = self.stats_manager.get_stat("stamina") / self.stats_manager.max_stamina
+
+            # Размеры полоски
+            bar_width = 50  # Уменьшаем ширину полоски
+            bar_height = 6  # Меньше высота полоски
+            bar_x = self.rect.centerx - bar_width / 2
+            bar_y = self.rect.top + 8  # Немного опускаем полоску для лучшего отображения
+
+            # Темно-желтый цвет для полоски
+            full_color = (255, 204, 0)  # Темно-желтый цвет
+            empty_color = (204, 153, 0)  # Темный желтый цвет для пустой части полоски
+
+            # Рисуем пустую полоску (темнее)
+            pygame.draw.rect(screen, empty_color, (bar_x, bar_y, bar_width, bar_height))
+
+            # Рисуем заполненную часть полоски (освещенная)
+            pygame.draw.rect(screen, full_color, (bar_x, bar_y, bar_width * stamina_percentage, bar_height))
+
 
     def check_death(self, deadly_acids):
         for acid in deadly_acids:

@@ -1,13 +1,14 @@
-import config_stats
+from menu_all.upgrade_menu import load_player_stats
+
 
 class PlayerStatsManager:
     def __init__(self):
-        # Инициализация характеристик игрока из config_stats.py
-        self.stamina = config_stats.player_stats["stamina"]
-        self.max_stamina = config_stats.player_stats["max_stamina"]
-        self.stamina_depletion_rate = config_stats.player_stats["stamina_depletion_rate"]
-        self.stamina_regeneration_rate = config_stats.player_stats["stamina_regeneration_rate"]
-
+        stats = load_player_stats()  # загрузка из player_stats.json
+        self.stamina = stats["stamina"]
+        self.max_stamina = stats["max_stamina"]
+        self.stamina_depletion_rate = stats["stamina_depletion_rate"]
+        self.stamina_regeneration_rate = stats["stamina_regeneration_rate"]
+        self.gun_ammo = stats["gun_ammo"]
     def get_stat(self, stat_name):
         """Возвращает значение статистики."""
         return getattr(self, stat_name, None)

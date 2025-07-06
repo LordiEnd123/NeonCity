@@ -34,6 +34,7 @@ def run_guide_menu(screen):
         draw_text("3. Удерживайте Ctrl для ускорения.", font, letters, screen, screen_width // 2, 300)
         draw_text("4. Нажмите W или S, чтобы подняться или спуститься с лестницы.", font, letters, screen, screen_width // 2, 350)
         draw_text("5. Нажмите Shift для того, чтобы слезть с лестницы.", font, letters, screen, screen_width // 2, 400)
+        draw_text("6. Стрельба на ЛКМ.", font, letters, screen, screen_width // 2, 450)
 
         mouse_pos = pygame.mouse.get_pos()
         is_hovered = button_rect.collidepoint(mouse_pos)

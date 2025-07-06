@@ -4,9 +4,9 @@ import pygame
 class SoundManager:
     def __init__(self):
         pygame.mixer.init()
-        self.music_volume = 0.8
-        self.effects_volume = 0.8
-        self.master_volume = 0.8
+        self.music_volume = 1
+        self.effects_volume = 1
+        self.master_volume = 1
         self.current_music = None
 
         self.sounds = {
@@ -16,11 +16,12 @@ class SoundManager:
             "exit": pygame.mixer.Sound("sounds/exit.wav"),
             "cristal": pygame.mixer.Sound("sounds/cristal.mp3"),
             "gun": pygame.mixer.Sound("sounds/gun.mp3"),
-            "spikes": pygame.mixer.Sound("sounds/spikes.mp3")
+            "vrag": pygame.mixer.Sound("sounds/vrag.mp3"),
+            "upgrad": pygame.mixer.Sound("sounds/upgrad.mp3")
         }
 
         self.menu_music = "sounds/menu_music.wav"
-        self.level_music = "sounds/level_soun.mp3"
+        self.level_music = "sounds/level_sound.mp3"
 
     def play_menu_music(self):
         if self.current_music == self.menu_music and pygame.mixer.music.get_busy():

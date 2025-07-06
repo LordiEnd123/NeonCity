@@ -4,6 +4,7 @@ from menu_all.level_select import run_level_select
 from world import run_level
 from settings.settings_menu import SettingsMenu
 from settings.sound_manager import SoundManager
+from menu_all.upgrade_menu import run_upgrade_menu
 
 screen_width = 1300
 screen_height = 700
@@ -52,7 +53,8 @@ while running:
             settings_menu.draw(screen)
             pygame.display.update()
             clock.tick(60)
-
+    elif game_state == "upgrade_menu":
+        game_state = run_upgrade_menu(screen, sound_manager)
     elif game_state == "exit":
         running = False
 

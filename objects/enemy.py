@@ -33,6 +33,9 @@ class Enemy:
         self.vel_y = 0
         self.in_air = True
 
+        self.max_health = 3
+        self.health = self.max_health
+
     def update_hitbox(self):
         self.hitbox = pygame.Rect(self.rect.x + self.hitbox_offset_left, self.rect.y + self.hitbox_offset_top,
                                   self.rect.width - self.hitbox_offset_left - self.hitbox_offset_right,
@@ -90,10 +93,31 @@ class Enemy:
         self.move(world)
         self.update_animation()
 
+    def take_damage(self, amount):
+        self.health -= amount
+        if self.health <= 0:
+            self.health = 0
+
+    def is_dead(self):
+        return self.health <= 0
+
+    def draw_health_bar(self, screen):
+        bar_width = 40
+        bar_height = 5
+        bar_x = self.rect.centerx - bar_width // 2
+        bar_y = self.rect.top + 5
+
+        health_ratio = self.health / self.max_health
+
+        # Фон (красный)
+        pygame.draw.rect(screen, (180, 0, 0), (bar_x, bar_y, bar_width, bar_height))
+        # Здоровье (зелёный)
+        pygame.draw.rect(screen, (0, 255, 0), (bar_x, bar_y, bar_width * health_ratio, bar_height))
+
     def draw(self, screen):
         flipped_image = pygame.transform.flip(self.image, True, False) if self.direction < 0 else self.image
         screen.blit(flipped_image, self.rect)
-       # pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2)
+        self.draw_health_bar(screen)
 
     def check_collision(self, player_rect):
         return self.hitbox.colliderect(player_rect)

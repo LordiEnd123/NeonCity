@@ -17,6 +17,8 @@ from objects.moving_block import MovingBlock
 from objects.gun import Gun
 from objects.zobast import ToothyEnemy
 from objects.stairs import Stair
+from objects.gun_item import GunItem
+from menu_all.upgrade_menu import load_player_stats
 
 pygame.init()
 
@@ -54,6 +56,7 @@ class World:
         self.guns = []
         self.zubast = []
         self.climb_eyes = []
+        self.gun_items = []
 
         tile_imgs = {
             1: 'block_8.png',
@@ -140,6 +143,8 @@ class World:
                         self.moving_blocks.append(MovingBlock(
                             x, y, width, height, direction=config["direction"], move_range=config["range"],
                             speed=config["speed"], image_name=config["image"]))
+                    elif tile == 42:
+                        self.gun_items.append(GunItem(x, y))
                 col_count += 1
             row_count += 1
 
@@ -181,10 +186,16 @@ class World:
             if game_active:
                 crystal.update()
             crystal.draw(screen)
+        for item in self.gun_items:
+            item.update()
+            item.draw(screen)
 
 
 def load_level_data(level_number):
-    level_module = importlib.import_module(f"levels.level{level_number}")
+    if level_number == "endless":
+        level_module = importlib.import_module("levels.level_endless")
+    else:
+        level_module = importlib.import_module(f"levels.level{level_number}")
     return level_module.world_data
 
 
@@ -225,6 +236,11 @@ def run_level(screen, level_number, sound_manager, settings_menu):
 
         if not paused and not level_menu.visible and not death_menu.visible and not final_menu.visible:
             player.update(world, screen)
+            for item in world.gun_items:
+                if not item.picked_up and item.check_collision(player.rect):
+                    player.has_gun = True
+                    stats = load_player_stats()
+                    player.ammo = stats.get("gun_ammo", 5)
             for crystal in world.crystals:
                 if crystal.check_collision(player.hitbox):
                     sound_manager.play_effect("cristal")
@@ -281,6 +297,16 @@ def run_level(screen, level_number, sound_manager, settings_menu):
                     player_dead = True
                     break
 
+        for bullet in player.bullets:
+            for enemy in world.enemies[:]:
+                if bullet.rect.colliderect(enemy.hitbox):
+                    enemy.take_damage(1)
+                    bullet.active = False
+                    sound_manager.play_effect("vrag")
+                    if enemy.is_dead():
+                        world.enemies.remove(enemy)
+                    break
+
         # Проверка выхода
         can_exit = False
         for exit_tile in world.exit_tiles:
@@ -304,6 +330,11 @@ def run_level(screen, level_number, sound_manager, settings_menu):
         font = pygame.font.SysFont(None, 30)
         text = font.render(f"Кристаллы: {collected_crystals}/{total_crystals}", True, (255, 255, 255))
         screen.blit(text, (20, 20))
+
+        if player.has_gun:
+            font = pygame.font.SysFont(None, 30)
+            ammo_text = font.render(f"Патроны: {player.ammo}", True, (255, 255, 0))
+            screen.blit(ammo_text, (20, 50))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

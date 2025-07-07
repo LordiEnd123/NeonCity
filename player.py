@@ -33,15 +33,11 @@ class Player:
         self.ready_to_climb = False
         self.climbing_direction = None
 
-        # Инициализация менеджера характеристик
         self.stats_manager = PlayerStatsManager()
+        self.last_time = pygame.time.get_ticks()
 
-        # Время с начала игры
-        self.last_time = pygame.time.get_ticks()  # Время в миллисекундах
-
-        # Инициализация ускорения
         self.accelerating = False
-        self.alpha = 0  # Прозрачность полоски (начинаем с 0, то есть полностью прозрачна)
+        self.alpha = 0
 
         self.has_gun = False
 
@@ -54,6 +50,7 @@ class Player:
         self.update_hitbox()
 
     def load_images(self):
+        # Без оружия
         self.walk_images = [pygame.transform.scale(pygame.image.load(os.path.join("img", f"hero_{i}.png")), (80, 80)) for i in range(3, 5)]
         self.idle_image = pygame.transform.scale(pygame.image.load("img/hero_1.png"), (80, 80))
         self.jump_image = pygame.transform.scale(pygame.image.load("img/hero_2.png"), (80, 80))
@@ -61,7 +58,7 @@ class Player:
         self.climb_up_images = [pygame.transform.scale(pygame.image.load(os.path.join("img", f"hero_{i}.png")), (80, 80)) for i in range(7, 9)]
         self.climb_down_images = self.climb_up_images
 
-        # С пистолетом
+        # С оружием
         self.walk_images_gun = [pygame.transform.scale(pygame.image.load(os.path.join("img", f"gun_hero_{i}.png")), (80, 80)) for i in range(3, 5)]
         self.idle_image_gun = pygame.transform.scale(pygame.image.load("img/gun_hero_1.png"), (80, 80))
         self.jump_image_gun = pygame.transform.scale(pygame.image.load("img/gun_hero_2.png"), (80, 80))
@@ -89,32 +86,31 @@ class Player:
 
         # Получаем текущее время
         current_time = pygame.time.get_ticks()
-        delta_time = (current_time - self.last_time) / 1000.0  # delta_time в секундах
+        delta_time = (current_time - self.last_time) / 1000.0
 
         # Обновляем время для следующего кадра
         self.last_time = current_time
 
-        # Логика ускорения (при удержании Ctrl)
+        # Ускорение при нажатии Ctrl
         if keys[pygame.K_LCTRL] and self.stats_manager.get_stat("stamina") > 0:
-            self.accelerating = True  # Ускорение
-            self.speed = 6.5  # Увеличиваем скорость при ускорении
+            self.accelerating = True
+            self.speed = 6.5
         else:
-            self.accelerating = False  # Без ускорения
-            self.speed = 5  # Обычная скорость
+            self.accelerating = False
+            self.speed = 5
 
-        # Обновляем выносливость в зависимости от движения и ускорения
+        # Обновляем выносливость
         if keys[pygame.K_d] or keys[pygame.K_a]:
             self.moving = True
             self.stats_manager.update_stamina(self.moving, self.accelerating, delta_time)
         else:
-            # Если игрок не двигается, восстанавливаем выносливость
+            # Если игрок не двигается, то восстанавливаем выносливость
             self.stats_manager.update_stamina(self.moving, self.accelerating, delta_time)
 
-        # Плавное изменение прозрачности полоски (затухание)
         if self.accelerating:
-            self.alpha = min(self.alpha + 10 * delta_time, 255)  # Увеличиваем прозрачность
+            self.alpha = min(self.alpha + 10 * delta_time, 255)
         else:
-            self.alpha = max(self.alpha - 10 * delta_time, 0)  # Уменьшаем прозрачность
+            self.alpha = max(self.alpha - 10 * delta_time, 0)
 
         self.update_hitbox()
 
@@ -325,7 +321,6 @@ class Player:
                 self.image = self.idle_image
 
     def update(self, world, screen):
-        # Вызов handle_input без необходимости передавать delta_time напрямую
         keys = pygame.key.get_pressed()
         self.handle_input(keys, world)
         self.apply_physics()
@@ -345,33 +340,22 @@ class Player:
         flipped = pygame.transform.flip(self.image, True, False) if not self.facing_right else self.image
         screen.blit(flipped, self.rect)
 
-        # Рисуем полоску ускорения
         self.draw_acceleration_bar(screen)
         for bullet in self.bullets:
             bullet.draw(screen)
 
     def draw_acceleration_bar(self, screen):
-        """Отображаем полоску ускорения над персонажем"""
-
-        # Проверяем, активен ли ускорение
         if self.accelerating:
-            # Получаем процент оставшейся выносливости
             stamina_percentage = self.stats_manager.get_stat("stamina") / self.stats_manager.max_stamina
-
-            # Размеры полоски
-            bar_width = 50  # Уменьшаем ширину полоски
-            bar_height = 6  # Меньше высота полоски
+            bar_width = 50
+            bar_height = 6
             bar_x = self.rect.centerx - bar_width / 2
-            bar_y = self.rect.top + 8  # Немного опускаем полоску для лучшего отображения
+            bar_y = self.rect.top + 8
 
-            # Темно-желтый цвет для полоски
-            full_color = (255, 204, 0)  # Темно-желтый цвет
-            empty_color = (204, 153, 0)  # Темный желтый цвет для пустой части полоски
+            full_color = (255, 204, 0)
+            empty_color = (204, 153, 0)
 
-            # Рисуем пустую полоску (темнее)
             pygame.draw.rect(screen, empty_color, (bar_x, bar_y, bar_width, bar_height))
-
-            # Рисуем заполненную часть полоски (освещенная)
             pygame.draw.rect(screen, full_color, (bar_x, bar_y, bar_width * stamina_percentage, bar_height))
 
 

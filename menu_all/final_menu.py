@@ -7,12 +7,7 @@ class FinalMenu:
         self.sound_manager = sound_manager
         self.width = 500
         self.height = 300
-        self.rect = pygame.Rect(
-            (screen_width - self.width) // 2,
-            (screen_height - self.height) // 2,
-            self.width,
-            self.height
-        )
+        self.rect = pygame.Rect((screen_width - self.width) // 2, (screen_height - self.height) // 2, self.width, self.height)
 
         self.font = pygame.font.SysFont('arial', 32, bold=True)
         self.button_font = pygame.font.SysFont('arial', 24, bold=True)
@@ -55,12 +50,7 @@ class FinalMenu:
             is_hovered = rect.collidepoint(mouse_pos)
             scale = 1.1 if is_hovered else 1.0
             new_size = (int(self.button_size[0] * scale), int(self.button_size[1] * scale))
-            scaled_rect = pygame.Rect(
-                rect.centerx - new_size[0] // 2,
-                rect.centery - new_size[1] // 2,
-                new_size[0],
-                new_size[1]
-            )
+            scaled_rect = pygame.Rect(rect.centerx - new_size[0] // 2, rect.centery - new_size[1] // 2, new_size[0], new_size[1])
 
             scaled_button = pygame.transform.scale(self.button_img, new_size)
             screen.blit(scaled_button, scaled_rect.topleft)

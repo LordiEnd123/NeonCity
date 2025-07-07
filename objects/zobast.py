@@ -9,23 +9,15 @@ class ToothyEnemy:
         self.sound_manager = sound_manager
         self.active = False
         self.activation_range = activation_range
-        self.image_open = pygame.transform.scale(
-            pygame.image.load(os.path.join("img", "zubastik1.png")), (tile_size, tile_size)
-        )
-        self.image_closed = pygame.transform.scale(
-            pygame.image.load(os.path.join("img", "zubastik2.png")), (tile_size, tile_size)
-        )
+        self.image_open = pygame.transform.scale(pygame.image.load(os.path.join("img", "zubastik1.png")), (tile_size, tile_size))
+        self.image_closed = pygame.transform.scale(pygame.image.load(os.path.join("img", "zubastik2.png")), (tile_size, tile_size))
         self.image = self.image_open
         self.attack_played = False
 
     def update(self, player_hitbox):
         overlap = player_hitbox.bottom - self.rect.top
         vertically_landed = 0 <= overlap <= 15
-
-        horizontally_aligned = (
-                player_hitbox.right > self.rect.left and
-                player_hitbox.left < self.rect.right
-        )
+        horizontally_aligned = (player_hitbox.right > self.rect.left and player_hitbox.left < self.rect.right)
 
         if vertically_landed and horizontally_aligned:
             if not self.active:

@@ -20,10 +20,8 @@ class Slider:
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.Rect(self.rect.x + self.value * self.rect.width - self.handle_radius,
-                           self.rect.y - self.handle_radius,
-                           self.handle_radius * 2,
-                           self.handle_radius * 2).collidepoint(event.pos):
+            if pygame.Rect(self.rect.x + self.value * self.rect.width - self.handle_radius, self.rect.y - self.handle_radius,
+                           self.handle_radius * 2, self.handle_radius * 2).collidepoint(event.pos):
                 self.dragging = True
         elif event.type == pygame.MOUSEBUTTONUP:
             self.dragging = False
@@ -64,7 +62,6 @@ class SettingsMenu:
     def draw(self, screen):
         if not self.visible:
             return
-
         screen.blit(pygame.transform.scale(self.background_img, screen.get_size()), (0, 0))
         overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 120))
@@ -72,7 +69,6 @@ class SettingsMenu:
         screen.blit(self.panel_img, self.rect.topleft)
         title = self.title_font.render("Настройки", True, (255, 255, 255))
         screen.blit(title, (self.rect.centerx - title.get_width() // 2, self.rect.y + 40))
-
         for slider in self.sliders:
             slider.draw(screen, self.font)
 
@@ -91,7 +87,6 @@ class SettingsMenu:
     def handle_event(self, event):
         if not self.visible:
             return None
-
         for slider in self.sliders:
             slider.handle_event(event)
 

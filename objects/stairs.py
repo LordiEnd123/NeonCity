@@ -12,7 +12,6 @@ class Stair:
             self.rect = pygame.Rect(x, y - 1, tile_size, tile_size + 10)
         else:
             self.rect = pygame.Rect(x, y, tile_size, tile_size)
-
         self.draw_rect = pygame.Rect(x, y, tile_size, tile_size)
 
     def draw(self, screen):

@@ -224,7 +224,7 @@ def run_level(screen, level_number, sound_manager, settings_menu):
     total_crystals = len(world.crystals)
     collected_crystals = 0
 
-    levels_folder = "levels"  # Папка с уровнями
+    levels_folder = "levels"
     level_files = [f for f in os.listdir(levels_folder) if f.startswith("level") and f.endswith(".py")]
     max_level = len(level_files)
 
@@ -313,7 +313,6 @@ def run_level(screen, level_number, sound_manager, settings_menu):
             if exit_tile.check_collision(player.rect) and collected_crystals == total_crystals:
                 can_exit = True
 
-        # Показываем надпись, если игрок в зоне выхода
         if can_exit and not level_menu.visible and not death_menu.visible and not final_menu.visible and not paused:
             font = pygame.font.SysFont(None, 30)
             text = font.render("Нажмите E, чтобы выйти из уровня", True, (255, 255, 255))

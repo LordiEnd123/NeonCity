@@ -25,12 +25,12 @@ class GunItem:
             time_sec = ticks / 1000
             float_offset = math.sin(time_sec * self.float_frequency * math.pi * 2) * self.float_amplitude
             self.rect.center = (self.base_x, self.base_y + float_offset)
-            self.collision_rect.center = self.rect.center  # обновляем позицию хитбокса
+            self.collision_rect.center = self.rect.center
 
     def draw(self, screen):
         if not self.picked_up:
             screen.blit(self.image, self.rect)
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+       # pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
 
     def check_collision(self, player_rect):
         if not self.picked_up and self.collision_rect.colliderect(player_rect):

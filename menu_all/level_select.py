@@ -34,7 +34,6 @@ def run_level_select(screen, sound_manager):
 
     hover_sound_played = {"next": False, "prev": False}
 
-    # Получаем список всех файлов уровней в папке
     levels_folder = "levels"
     level_files = [f for f in os.listdir(levels_folder) if f.startswith("level") and f.endswith(".py")]
     max_level = len(level_files)
@@ -63,7 +62,6 @@ def run_level_select(screen, sound_manager):
     next_arrow = pygame.Rect(screen_width - 100, 610, 60, 60)
     prev_arrow = pygame.Rect(40, 610, 60, 60)
 
-    # Кнопка Прокачка (над кнопкой Назад)
     upgrade_btn = pygame.Rect(screen_width // 2 - 100, 540, 200, 50)
     upgrade_button_img = pygame.transform.scale(back_button_img, (200, 50))
 
@@ -143,7 +141,6 @@ def run_level_select(screen, sound_manager):
             arrow_pos = (prev_arrow.centerx - arrow_scaled.get_width() // 2, prev_arrow.centery - arrow_scaled.get_height() // 2)
             screen.blit(arrow_scaled, arrow_pos)
 
-        # Обработка событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return "exit"

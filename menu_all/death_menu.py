@@ -9,12 +9,7 @@ class DeathMenu:
 
         self.width = 400
         self.height = 200
-        self.rect = pygame.Rect(
-            (screen_width - self.width) // 2,
-            (screen_height - self.height) // 2,
-            self.width,
-            self.height
-        )
+        self.rect = pygame.Rect((screen_width - self.width) // 2, (screen_height - self.height) // 2, self.width, self.height)
 
         self.font = pygame.font.SysFont('arial', 32, bold=True)
         self.button_font = pygame.font.SysFont('arial', 24, bold=True)
@@ -24,7 +19,7 @@ class DeathMenu:
         self.menu_bg_img = pygame.transform.scale(self.menu_bg_img, (self.width, self.height))
 
         self.button_img = pygame.image.load(os.path.join("img", "button_red.png")).convert_alpha()
-        self.button_img_big = pygame.transform.scale(self.button_img, (220, 48))  # увеличенный для hover
+        self.button_img_big = pygame.transform.scale(self.button_img, (220, 48))
 
         self.buttons = {
             "restart": pygame.Rect(self.rect.x + 100, self.rect.y + 70, 200, 40),
@@ -50,7 +45,6 @@ class DeathMenu:
         }
 
         mouse_pos = pygame.mouse.get_pos()
-
         for key, rect in self.buttons.items():
             is_hovered = rect.collidepoint(mouse_pos)
             font = self.button_font_big if is_hovered else self.button_font

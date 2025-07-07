@@ -1,6 +1,6 @@
 import pygame
 import os
-from menu_all.guide_menu import run_guide_menu  # Импортируем меню Руководства
+from menu_all.guide_menu import run_guide_menu
 
 screen_width = 1300
 screen_height = 700
@@ -27,14 +27,14 @@ def run_menu(screen, sound_manager):
     base_buttons = {
         "play": pygame.Rect(screen_width // 2 - 100, 200, 200, 60),
         "settings": pygame.Rect(screen_width // 2 - 100, 300, 200, 60),
-        "guide": pygame.Rect(screen_width // 2 - 100, 400, 200, 60),  # Добавляем кнопку Руководства
+        "guide": pygame.Rect(screen_width // 2 - 100, 400, 200, 60),
         "quit": pygame.Rect(screen_width // 2 - 100, 500, 200, 60)
     }
 
     labels = {
         "play": "Играть",
         "settings": "Настройки",
-        "guide": "Правила",  # Надпись на кнопке Руководства
+        "guide": "Правила",
         "quit": "Выход"
     }
 

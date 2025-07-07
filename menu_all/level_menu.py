@@ -7,12 +7,7 @@ class LevelCompleteMenu:
         self.sound_manager = sound_manager
         self.width = 400
         self.height = 300
-        self.rect = pygame.Rect(
-            (screen_width - self.width) // 2,
-            (screen_height - self.height) // 2,
-            self.width,
-            self.height
-        )
+        self.rect = pygame.Rect((screen_width - self.width) // 2, (screen_height - self.height) // 2, self.width, self.height)
 
         self.font = pygame.font.SysFont('arial', 32, bold=True)
         self.button_font = pygame.font.SysFont('arial', 24, bold=True)
@@ -58,12 +53,7 @@ class LevelCompleteMenu:
 
             new_w = int(rect.width * scale)
             new_h = int(rect.height * scale)
-            scaled_rect = pygame.Rect(
-                rect.centerx - new_w // 2,
-                rect.centery - new_h // 2,
-                new_w,
-                new_h
-            )
+            scaled_rect = pygame.Rect(rect.centerx - new_w // 2, rect.centery - new_h // 2, new_w, new_h)
 
             scaled_img = pygame.transform.scale(self.button_image, (new_w, new_h))
             screen.blit(scaled_img, scaled_rect.topleft)

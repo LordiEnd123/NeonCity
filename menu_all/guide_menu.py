@@ -4,25 +4,26 @@ import os
 screen_width = 1300
 screen_height = 700
 
+
 def draw_text(text, font, color, surface, x, y):
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect(center=(x, y))
     surface.blit(text_obj, text_rect)
 
+
 def run_guide_menu(screen):
     font = pygame.font.SysFont(None, 40)
     button_font = pygame.font.SysFont(None, 50)
-    button_font_big = pygame.font.SysFont(None, 55)  # Увеличенный шрифт для текста на кнопке
+    button_font_big = pygame.font.SysFont(None, 55)
     letters = (50, 205, 50)
 
     button_bg_img = pygame.image.load(os.path.join("img", "button_menu.png")).convert_alpha()
     button_bg_img = pygame.transform.scale(button_bg_img, (200, 60))
 
-    bg_img = pygame.image.load(os.path.join("img", "guide_bg.png"))  # Используем картинку для фона
+    bg_img = pygame.image.load(os.path.join("img", "guide_bg.png"))
     bg_img = pygame.transform.scale(bg_img, (screen_width, screen_height))
 
     button_rect = pygame.Rect(screen_width // 2 - 100, screen_height - 100, 200, 60)
-
     button_label = "Назад"
 
     while True:
@@ -47,7 +48,6 @@ def run_guide_menu(screen):
 
         screen.blit(scaled_image, scaled_rect)
 
-        # Выбираем размер шрифта для текста на кнопке в зависимости от того, наведен ли курсор
         current_font = button_font_big if is_hovered else button_font
         text_surf = current_font.render(button_label, True, letters)
         text_rect = text_surf.get_rect(center=scaled_rect.center)
@@ -57,7 +57,6 @@ def run_guide_menu(screen):
             if event.type == pygame.QUIT:
                 return "exit"
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if button_rect.collidepoint(event.pos):  # Если нажата кнопка "Назад"
+                if button_rect.collidepoint(event.pos):
                     return "menu"
-
         pygame.display.update()

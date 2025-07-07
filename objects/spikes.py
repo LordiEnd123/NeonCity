@@ -22,12 +22,10 @@ class Spike:
 
     def update(self):
         self.timer += 1
-
         if self.active and self.timer >= self.active_duration:
             self.active = False
             self.timer = 0
             self.sound_manager.play_effect("spikes")
-
         elif not self.active and self.timer >= self.inactive_duration:
             self.active = True
             self.timer = 0
@@ -37,7 +35,6 @@ class Spike:
         image = self.image_up if self.active else self.image_down
         screen.blit(image, (self.x, self.y))
        # pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
-
 
     def check_collision(self, player_hitbox):
         return self.active and self.rect.colliderect(player_hitbox)

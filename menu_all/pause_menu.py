@@ -7,23 +7,15 @@ class PauseMenu:
         self.sound_manager = sound_manager
         self.width = 400
         self.height = 280
-        self.rect = pygame.Rect(
-            (screen_width - self.width) // 2,
-            (screen_height - self.height) // 2,
-            self.width,
-            self.height
-        )
+        self.rect = pygame.Rect((screen_width - self.width) // 2, (screen_height - self.height) // 2, self.width, self.height)
 
         self.font = pygame.font.SysFont('arial', 22, bold=True)
         self.button_font = pygame.font.SysFont('arial', 24, bold=True)
         self.button_font_big = pygame.font.SysFont('arial', 28, bold=True)
         self.visible = False
 
-        # Загрузка фона меню
         self.bg_image = pygame.image.load(os.path.join("img", "in_level.png")).convert_alpha()
         self.bg_image = pygame.transform.scale(self.bg_image, (self.width, self.height))
-
-        # Загрузка изображения кнопок
         self.button_image = pygame.image.load(os.path.join("img", "button_menu.png")).convert_alpha()
         self.button_size = (200, 40)
 
@@ -63,12 +55,7 @@ class PauseMenu:
 
             new_w = int(self.button_size[0] * scale)
             new_h = int(self.button_size[1] * scale)
-            scaled_rect = pygame.Rect(
-                rect.centerx - new_w // 2,
-                rect.centery - new_h // 2,
-                new_w,
-                new_h
-            )
+            scaled_rect = pygame.Rect(rect.centerx - new_w // 2, rect.centery - new_h // 2, new_w, new_h)
 
             button_img_scaled = pygame.transform.scale(self.button_image, (new_w, new_h))
             screen.blit(button_img_scaled, scaled_rect.topleft)

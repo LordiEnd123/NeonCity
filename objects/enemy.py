@@ -16,15 +16,12 @@ class Enemy:
 
         self.rect = self.image.get_rect(topleft=(x, y))
 
-        # Хитбокс
         self.hitbox_offset_left = 22
         self.hitbox_offset_right = 22
         self.hitbox_offset_top = 25
         self.hitbox_offset_bottom = 1
-
         self.update_hitbox()
 
-        # Движение
         self.start_x = x
         self.move_range = move_range
         self.speed = speed
@@ -53,7 +50,6 @@ class Enemy:
 
         tile_below = pygame.Rect(next_x, foot_y, 1, 1)
         has_ground = any(tile[1].colliderect(tile_below) for tile in world.tile_list)
-
         if not has_ground:
             self.direction *= -1
             return
@@ -61,7 +57,6 @@ class Enemy:
         # Горизонтальное движение
         self.rect.x += self.speed * self.direction
         self.update_hitbox()
-
         for tile in world.tile_list:
             if tile[1].colliderect(self.hitbox):
                 self.direction *= -1
@@ -106,12 +101,9 @@ class Enemy:
         bar_height = 5
         bar_x = self.rect.centerx - bar_width // 2
         bar_y = self.rect.top + 5
-
         health_ratio = self.health / self.max_health
 
-        # Фон (красный)
         pygame.draw.rect(screen, (180, 0, 0), (bar_x, bar_y, bar_width, bar_height))
-        # Здоровье (зелёный)
         pygame.draw.rect(screen, (0, 255, 0), (bar_x, bar_y, bar_width * health_ratio, bar_height))
 
     def draw(self, screen):

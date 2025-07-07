@@ -66,10 +66,7 @@ def run_upgrade_menu(screen, sound_manager):
         "gun_ammo": "Патроны в оружии"
     }
 
-    upgrade_buttons = {
-        key: pygame.Rect(900, base_y + i * (stat_box_height + 20) + 20, 40, 40)
-        for i, key in enumerate(stat_labels)
-    }
+    upgrade_buttons = {key: pygame.Rect(900, base_y + i * (stat_box_height + 20) + 20, 40, 40) for i, key in enumerate(stat_labels)}
 
     running = True
     while running:
@@ -84,12 +81,10 @@ def run_upgrade_menu(screen, sound_manager):
         for i, (key, label) in enumerate(stat_labels.items()):
             y = base_y + i * (stat_box_height + 20)
 
-            # Подложка под параметры
             box_rect = pygame.Rect(300, y, stat_box_width, stat_box_height)
             pygame.draw.rect(screen, (40, 40, 50), box_rect, border_radius=12)
             pygame.draw.rect(screen, (100, 100, 120), box_rect, 2, border_radius=12)
 
-            # Название и значение
             draw_text(f"{label}: {round(upgraded_stats[key], 2)}", font, (255, 255, 255), screen, box_rect.centerx - 80, box_rect.centery)
 
             # Кнопка "+"
@@ -98,7 +93,7 @@ def run_upgrade_menu(screen, sound_manager):
             pygame.draw.rect(screen, plus_color, upgrade_buttons[key], border_radius=6)
             draw_text("+", font, (255, 255, 255), screen, upgrade_buttons[key].centerx, upgrade_buttons[key].centery)
 
-        # Кнопка назад с ховер-анимацией
+        # Кнопка назад
         mouse_pos = pygame.mouse.get_pos()
         is_hovered = back_btn_rect.collidepoint(mouse_pos)
         scale = 1.1 if is_hovered else 1.0

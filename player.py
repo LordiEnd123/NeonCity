@@ -191,7 +191,7 @@ class Player:
             if not keys[pygame.K_SPACE]:
                 self.jump_pressed = False
 
-            if keys[pygame.K_f] and self.has_gun:
+            if pygame.mouse.get_pressed()[0] and self.has_gun:
                 now = pygame.time.get_ticks()
                 if now - self.last_shot_time > self.shoot_cooldown:
                     self.shoot()
